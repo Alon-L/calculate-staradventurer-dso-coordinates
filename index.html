@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Calculate Star Adventurer Coordinates</title>
+  </head>
+  <body>
+	<h1>Calculate RA</h1>
+
+	<form action="javascript:submitRA()">
+		<input type="number" id="initialHours" placeholder="Initial Hours" value="9" />
+		<input type="number" id="initialMinutes" placeholder="Initial Minutes" value="8" />
+		
+		<br>
+	
+		<input type="number" id="hours" placeholder="Hours" />
+		<input type="number" id="minutes" placeholder="Minutes" />
+		
+		<br>
+		
+		<button type="submit"> 
+			Calculate RA
+		</button>
+	</form>
+	
+	<span id="resultRA"></span>
+	
+	<h1>Calculate Dec</h1>
+
+	<form action="javascript:submitDec()">
+		<input type="number" id="ninetyDegreeActualDec" placeholder="Ninety Degree Actual Dec" value="94" />
+		
+		<br>
+	
+		<input type="number" id="dec" placeholder="Dec" />
+		
+		<br>
+		
+		<button type="submit"> 
+			Calculate Dec
+		</button>
+	</form>
+	
+	<span id="resultDec"></span>
+	
+	<script type="text/javascript">
+		function calcRA(initialH, initialM, H, M) {		
+			const minutesFromHour = (((H / 2) * 10) % 10) * 60 / 10;
+			const minutes = initialM + (M / 2);
+
+			const totalMinutes = minutesFromHour + minutes;
+			const actualMinutes = totalMinutes % 60;
+			const hoursFromTotalMinutes = Math.floor(totalMinutes / 60);
+
+			const hours = (initialH + Math.floor(H / 2)) % 12;
+			const actualHours = (hours + hoursFromTotalMinutes) % 12;
+
+			return `${actualHours.toString().padStart(2, '0')}:${actualMinutes.toString().padStart(2, '0')}`;
+		}
+		
+		function calcDec(ninetyDegreeActualDec, dec) {
+			const offset = 90 - ninetyDegreeActualDec;
+			const result = dec + offset;
+			
+			return `${result.toString().padStart(2, '0')}`;
+		}
+		
+		function submitRA(form) {
+			const initialHours = document.getElementById("initialHours").value || 0;
+			const initialMinutes = document.getElementById("initialMinutes").value || 0;
+			const hours = document.getElementById("hours").value || 0;
+			const minutes = document.getElementById("minutes").value || 0;
+
+			const result = calcRA(parseInt(initialHours), parseInt(initialMinutes), parseInt(hours), parseInt(minutes));
+
+			document.getElementById("resultRA").innerText = result;
+		}
+		
+		function submitDec(form) {
+			const ninetyDegreeActualDec = document.getElementById("ninetyDegreeActualDec").value || 0;
+			const dec = document.getElementById("dec").value || 0;
+
+			const result = calcDec(parseInt(ninetyDegreeActualDec), parseInt(dec));
+
+			document.getElementById("resultDec").innerText = result;
+		}
+	</script>
+  </body>
+</html>
